@@ -34,7 +34,7 @@ class Order(models.Model):
     )
 
     def __str__(self):
-        return f"Order #{self.id}"
+        return f"Заказ №{self.id}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
@@ -54,3 +54,6 @@ class OrderItem(models.Model):
         max_digits=10,
         decimal_places=2
     )
+
+    def __str__(self):
+        return f'{self.book.title} ({self.quantity})'

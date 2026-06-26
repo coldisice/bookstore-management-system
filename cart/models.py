@@ -14,7 +14,7 @@ class Cart(models.Model):
     )
 
     def __str__(self):
-        return f"Cart #{self.id}"
+        return f"Корзина пользователя {self.user.username}"
     
 class CartItem(models.Model):
     cart = models.ForeignKey(
@@ -32,3 +32,6 @@ class CartItem(models.Model):
 
     class Meta:
         unique_together = ('cart', 'book')
+
+    def __str__(self):
+        return f'{self.book.title} ({self.quantity})'
