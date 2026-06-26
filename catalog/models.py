@@ -15,6 +15,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
 class Book(models.Model):
     title = models.CharField(max_length=255)
     isbn = models.CharField(max_length=20, unique=True)
@@ -30,43 +34,43 @@ class Book(models.Model):
 
     authors = models.ManyToManyField(
         Author,
-        through='BookAuthor',
         related_name='books'
     )
 
     categories = models.ManyToManyField(
         Category,
-        through='BookCategory',
         related_name='books'
     )
 
     def __str__(self):
         return self.title
     
-class BookAuthor(models.Model):
-    book = models.ForeignKey(
-        Book,
-        on_delete=models.CASCADE
-    )
+# class BookAuthor(models.Model):
+#     book = models.ForeignKey(
+#         Book,
+#         on_delete=models.CASCADE
+#     )
 
-    author = models.ForeignKey(
-        Author,
-        on_delete=models.CASCADE
-    )
+#     author = models.ForeignKey(
+#         Author,
+#         on_delete=models.CASCADE
+#     )
 
-    class Meta:
-        unique_together = ('book', 'author')
+#     class Meta:
+#         unique_together = ('book', 'author')
 
-class BookCategory(models.Model):
-    book = models.ForeignKey(
-        Book,
-        on_delete=models.CASCADE
-    )
+# class BookCategory(models.Model):
+#     book = models.ForeignKey(
+#         Book,
+#         on_delete=models.CASCADE
+#     )
 
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE
-    )
+#     category = models.ForeignKey(
+#         Category,
+#         on_delete=models.CASCADE
+#     )
 
-    class Meta:
-        unique_together = ('book', 'category')
+#     class Meta:
+#         unique_together = ('book', 'category')
+#         verbose_name = 'Book category'
+#         verbose_name_plural = 'Book categories'

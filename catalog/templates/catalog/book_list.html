@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Каталог книг
+{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">
+    Каталог книг
+</h1>
+
+{% for book in books %}
+
+<div class="card mb-3">
+    <div class="card-body">
+
+        <h3>
+            <a href="{% url 'book_detail' book.id %}">
+                {{ book.title }}
+            </a>
+        </h3>
+
+        <p>
+            Цена:
+            {{ book.price }} ₽
+        </p>
+
+    </div>
+</div>
+
+{% empty %}
+
+<p>Книги отсутствуют.</p>
+
+{% endfor %}
+
+{% endblock %}
