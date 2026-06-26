@@ -10,7 +10,88 @@
     Каталог книг
 </h1>
 
-{% for book in books %}
+<form method="get" class="mb-4">
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="q"
+            class="form-control"
+            placeholder="Поиск книг..."
+            value="{{ search_query }}">
+
+        <button
+            type="submit"
+            class="btn btn-primary">
+
+            Найти
+
+        </button>
+
+    </div>
+
+</form>
+
+<form method="get" class="mb-4">
+
+<div class="card mb-4">
+    <button
+        class="btn btn-outline-secondary mb-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#categoryFilter">
+
+        Категории
+    </button>
+<div
+    class="collapse"
+    id="categoryFilter">
+    <div class="card-body">
+
+        {% for category in categories %}
+
+        <div class="form-check">
+
+            <input
+                class="form-check-input"
+                type="checkbox"
+                name="category"
+                value="{{ category.id }}"
+                id="category{{ category.id }}"
+
+                {% if category.id|stringformat:"s" in selected_categories %}
+                    checked
+                {% endif %}
+            >
+
+            <label
+                class="form-check-label"
+                for="category{{ category.id }}">
+
+                {{ category.name }}
+
+            </label>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+</div>
+
+    <button
+        type="submit"
+        class="btn btn-secondary">
+
+        Фильтр
+
+    </button>
+
+</form>
+
+{% for book in page_obj %}
 
 <div class="card mb-3">
     <div class="card-body">
@@ -34,5 +115,45 @@
 <p>Книги отсутствуют.</p>
 
 {% endfor %}
+
+<nav>
+
+<ul class="pagination">
+
+    {% if page_obj.has_previous %}
+
+    <li class="page-item">
+        <a
+            class="page-link"
+            href="?page={{ page_obj.previous_page_number }}">
+            Назад
+        </a>
+    </li>
+
+    {% endif %}
+
+    <li class="page-item active">
+        <span class="page-link">
+
+            {{ page_obj.number }}
+
+        </span>
+    </li>
+
+    {% if page_obj.has_next %}
+
+    <li class="page-item">
+        <a
+            class="page-link"
+            href="?page={{ page_obj.next_page_number }}">
+            Вперед
+        </a>
+    </li>
+
+    {% endif %}
+
+</ul>
+
+</nav>
 
 {% endblock %}

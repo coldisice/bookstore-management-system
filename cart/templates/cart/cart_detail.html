@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Корзина
+{% endblock %}
+
+{% block content %}
+
+<h1>Корзина</h1>
+
+<table class="table">
+
+    <tr>
+        <th>Книга</th>
+        <th>Цена</th>
+        <th>Количество</th>
+        <th>Сумма</th>
+    </tr>
+
+    {% for item in cart.items.all %}
+
+    <tr>
+        <td>{{ item.book.title }}</td>
+
+        <td>{{ item.book.price }}</td>
+
+        <td>{{ item.quantity }}</td>
+
+        <td>
+            {% widthratio item.book.price 1 item.quantity %}
+        </td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<h3>
+    Итого: {{ total }} ₽
+</h3>
+
+<form
+    method="post"
+    action="{% url 'create_order' %}">
+
+    {% csrf_token %}
+
+    <button
+        type="submit"
+        class="btn btn-success">
+
+        Оформить заказ
+
+    </button>
+
+</form>
+
+{% endblock %}

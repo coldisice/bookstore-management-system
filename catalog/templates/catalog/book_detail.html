@@ -40,4 +40,15 @@
     {{ book.description }}
 </p>
 
+<form method="post"
+      action="{% url 'add_to_cart' book.id %}">
+    {% csrf_token %}
+
+    <button type="submit"
+            class="btn btn-primary">
+        Добавить в корзину
+    </button>
+</form>
+
 {% endblock %}
+
