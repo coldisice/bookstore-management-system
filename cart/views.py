@@ -47,3 +47,38 @@ def cart_detail(request):
             'total': total,
         }
     )
+
+@login_required
+def update_cart_item(request, item_id, action):
+    item = get_object_or_404(
+        CartItem,
+        id=item_id,
+        cart__user=request.user
+    )
+
+    if action == "increase":
+        item.quantity += 1
+        item.save()
+
+    elif action == "decrease":
+        item.quantity -= 1
+
+        if item.quantity <= 0:
+            item.delete()
+        else:
+            item.save()
+
+    return redirect('cart_detail')
+
+
+@login_required
+def remove_cart_item(request, item_id):
+    item = get_object_or_404(
+        CartItem,
+        id=item_id,
+        cart__user=request.user
+    )
+
+    item.delete()
+
+    return redirect('cart_detail')
