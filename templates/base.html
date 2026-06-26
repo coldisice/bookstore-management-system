@@ -44,6 +44,15 @@
                 Заказы
             </a>
 
+            <a class="nav-link"
+            href="{% url 'profile' %}">
+                Профиль
+            </a>
+
+            <span class="navbar-text me-3">
+                {{ user.username }}
+            </span>
+
             <form
                 action="{% url 'logout' %}"
                 method="post">
