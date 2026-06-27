@@ -7,11 +7,11 @@ from catalog.models import Book
 class Order(models.Model):
 
     class Status(models.TextChoices):
-        NEW = 'NEW', 'New'
-        PROCESSING = "PROCESSING", 'Processing'
-        SHIPPED = 'SHIPPED', 'Shipped'
-        COMPLETED = 'COMPLETED', 'Completed'
-        CANCELLED = 'CANCELLED', 'Cancelled'
+        NEW = 'NEW', 'Новый'
+        PROCESSING = "PROCESSING", 'В процессе'
+        SHIPPED = 'SHIPPED', 'Передан в доставку'
+        COMPLETED = 'COMPLETED', 'Завершен'
+        CANCELLED = 'CANCELLED', 'Отменен'
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
