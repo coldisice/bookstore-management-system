@@ -3,6 +3,7 @@ from django.conf import settings
 
 from catalog.models import Book
 
+
 class Cart(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -15,7 +16,8 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"Корзина пользователя {self.user.username}"
-    
+
+
 class CartItem(models.Model):
     cart = models.ForeignKey(
         Cart,
@@ -35,7 +37,7 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f'{self.book.title} ({self.quantity})'
-    
+
     @property
     def total_price(self):
         return self.book.price * self.quantity

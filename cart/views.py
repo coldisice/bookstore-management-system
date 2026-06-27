@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from catalog.models import Book
 from .models import Cart, CartItem
 
+
 @login_required
 def add_to_cart(request, book_id):
 
@@ -27,6 +28,7 @@ def add_to_cart(request, book_id):
 
     return redirect('cart_detail')
 
+
 @login_required
 def cart_detail(request):
 
@@ -47,6 +49,7 @@ def cart_detail(request):
             'total': total,
         }
     )
+
 
 @login_required
 def update_cart_item(request, item_id, action):

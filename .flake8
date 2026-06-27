@@ -1,0 +1,8 @@
+[flake8]
+exclude =
+    venv,
+    .venv,
+    env,
+    migrations,
+    __pycache__,
+    bookstore/settings.py

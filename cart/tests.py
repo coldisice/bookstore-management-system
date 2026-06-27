@@ -3,11 +3,11 @@ from django.test import TestCase
 from datetime import date
 
 from django.contrib.auth.models import User
-from django.test import TestCase
 from django.urls import reverse
 
 from catalog.models import Author, Category, Book
 from .models import Cart, CartItem
+
 
 class CartTest(TestCase):
 

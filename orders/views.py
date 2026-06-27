@@ -6,6 +6,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from cart.models import Cart
 from .models import Order, OrderItem
 
+
 @login_required
 def create_order(request):
 
@@ -49,6 +50,7 @@ def create_order(request):
         order_id=order.id
     )
 
+
 @login_required
 def order_list(request):
 
@@ -63,6 +65,7 @@ def order_list(request):
             'orders': orders
         }
     )
+
 
 @login_required
 def order_detail(

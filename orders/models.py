@@ -3,6 +3,7 @@ from django.conf import settings
 
 from catalog.models import Book
 
+
 class Order(models.Model):
 
     class Status(models.TextChoices):
@@ -22,27 +23,28 @@ class Order(models.Model):
     )
 
     status = models.CharField(
-        max_length = 20,
-        choices = Status.choices,
-        default = Status.NEW
+        max_length=20,
+        choices=Status.choices,
+        default=Status.NEW
     )
 
     total_price = models.DecimalField(
-        max_digits = 10,
-        decimal_places = 2,
-        default = 0
+        max_digits=10,
+        decimal_places=2,
+        default=0
     )
 
     def __str__(self):
         return f"Заказ №{self.id}"
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
-        related_name = 'items'
+        related_name='items'
     )
-    
+
     book = models.ForeignKey(
         Book,
         on_delete=models.CASCADE

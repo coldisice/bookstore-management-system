@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+
 class UserRegistrationTest(TestCase):
 
     def test_user_registration(self):
@@ -22,12 +23,13 @@ class UserRegistrationTest(TestCase):
             ).exists()
         )
 
+
 class UserProfileTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(
-            username = 'Пользователь',
-            password = 'TestPassword123!'
+            username='Пользователь',
+            password='TestPassword123!'
         )
 
     def test_profile_requires_login(self):
@@ -39,8 +41,8 @@ class UserProfileTest(TestCase):
 
     def test_profile_page_for_authorized_user(self):
         self.client.login(
-            username = 'Пользователь',
-            password = 'TestPassword123!'
+            username='Пользователь',
+            password='TestPassword123!'
         )
 
         response = self.client.get(
@@ -51,8 +53,8 @@ class UserProfileTest(TestCase):
 
     def test_profile_contains_statistics(self):
         self.client.login(
-            username = 'Пользователь',
-            password = 'TestPassword123!'
+            username='Пользователь',
+            password='TestPassword123!'
         )
 
         response = self.client.get(

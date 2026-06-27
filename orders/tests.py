@@ -10,6 +10,7 @@ from catalog.models import Author, Category, Book
 from cart.models import Cart, CartItem
 from .models import Order, OrderItem
 
+
 class OrderTest(TestCase):
 
     def setUp(self):

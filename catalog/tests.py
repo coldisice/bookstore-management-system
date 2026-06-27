@@ -122,21 +122,21 @@ class CatalogViewsTest(TestCase):
 
     def setUp(self):
         self.author = Author.objects.create(
-            first_name = 'Лев',
-            last_name = 'Толстой'
+            first_name='Лев',
+            last_name='Толстой'
         )
 
         self.category = Category.objects.create(
-            name = 'Роман'
+            name='Роман'
         )
 
         self.book = Book.objects.create(
-            title = 'Война и мир',
-            isbn = '9785170901234',
-            description = 'Роман',
-            price = 400,
-            stock_quantity = 5,
-            publication_date = date(1869,1,1)
+            title='Война и мир',
+            isbn='9785170901234',
+            description='Роман',
+            price=400,
+            stock_quantity=5,
+            publication_date=date(1869, 1, 1)
         )
 
         self.book.authors.add(self.author)
@@ -148,7 +148,7 @@ class CatalogViewsTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-    
+
     def test_book_list_contains_book(self):
         response = self.client.get(
             reverse('book_list')

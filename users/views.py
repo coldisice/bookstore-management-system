@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from cart.models import Cart
 from orders.models import Order
 
+
 def register(request):
 
     if request.method == 'POST':
@@ -22,6 +23,7 @@ def register(request):
         'users/register.html',
         {'form': form}
     )
+
 
 @login_required
 def profile(request):

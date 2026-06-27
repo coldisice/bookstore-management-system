@@ -4,16 +4,16 @@ from django.core.paginator import Paginator
 
 from .models import Book, Category
 
+
 def book_list(request):
     categories = Category.objects.all()
-    search_query = request.GET.get('q','')
+    search_query = request.GET.get('q', '')
     category_ids = request.GET.getlist('category')
     category_ids = [
-    category_id
-    for category_id in category_ids
-    if category_id
-]
-
+        category_id
+        for category_id in category_ids
+        if category_id
+    ]
 
     books = Book.objects.all()
 
@@ -24,7 +24,7 @@ def book_list(request):
 
     if search_query:
         books = books.filter(
-            Q(title__icontains = search_query)
+            Q(title__icontains=search_query)
         )
 
     paginator = Paginator(
@@ -48,6 +48,7 @@ def book_list(request):
         'catalog/book_list.html',
         context
     )
+
 
 def book_detail(request, book_id):
     book = get_object_or_404(
