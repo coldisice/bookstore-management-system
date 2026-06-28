@@ -1,0 +1,41 @@
+.book-card-img {
+    position: relative;
+    width: 100%;
+}
+
+.book-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    aspect-ratio: 13/20;
+}
+
+.book-cover-placeholder {
+    height: 320px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}
+
+.book-title,
+.book-authors {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+}
+
+.book-title {
+    height: 48px;
+    overflow: hidden;
+    line-height: 24px;
+}
+
+.book-authors {
+    height: 48px;
+    overflow: hidden;
+    line-height: 24px;
+}

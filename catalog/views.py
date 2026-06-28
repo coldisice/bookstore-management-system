@@ -35,12 +35,16 @@ def book_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    params = request.GET.copy()
+    params.pop('page', None)
+
     context = {
         'books': books,
         'search_query': search_query,
         'categories': categories,
         'selected_categories': category_ids,
         'page_obj': page_obj,
+        'query_string': params.urlencode()
     }
 
     return render(
