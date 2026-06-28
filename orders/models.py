@@ -59,3 +59,9 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'{self.book.title} ({self.quantity})'
+
+    def save(self, *args, **kwargs):
+        if not self.price:
+            self.price = self.book.price
+
+        super().save(*args, **kwargs)

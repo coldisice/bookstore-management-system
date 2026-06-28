@@ -121,7 +121,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "catalog" / "templates" / "catalog" / "static" / "css"
+    BASE_DIR / "catalog" / "templates" / "catalog" / "static" / "css",
+    BASE_DIR / "orders" / "static" / "orders" / "js"
 ]
 
 # Media
