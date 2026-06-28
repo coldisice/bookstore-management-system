@@ -3,12 +3,18 @@ from django.shortcuts import redirect, render
 from django.urls import path
 from django.conf import settings
 from django.http import FileResponse
+
 from pathlib import Path
+
+from io import BytesIO
 
 from .models import Author, Category, Book
 
 from .forms import ImportBooksForm
-from .services import import_books_from_excel
+from .services import (
+    import_books_from_excel,
+    export_books_to_excel
+)
 
 admin.site.register(Author)
 admin.site.register(Category)
@@ -37,6 +43,24 @@ class BookAdmin(admin.ModelAdmin):
     ordering = (
         'title',
     )
+
+    def export_books(self, request):
+
+        workbook = export_books_to_excel()
+
+        file = BytesIO()
+        workbook.save(file)
+        file.seek(0)
+
+        return FileResponse(
+            file,
+            as_attachment=True,
+            filename="books.xlsx",
+            content_type=(
+                "application/vnd.openxmlformats-officedocument."
+                "spreadsheetml.sheet"
+            ),
+        )
 
     def import_books(self, request):
 
@@ -122,6 +146,11 @@ class BookAdmin(admin.ModelAdmin):
                 "import/template",
                 self.admin_site.admin_view(self.download_template),
                 name="catalog_book_import_template"
+            ),
+            path(
+                "export/",
+                self.admin_site.admin_view(self.export_books),
+                name="catalog_book_export"
             )
         ]
 

@@ -3,6 +3,12 @@
 {% block object-tools-items %}
 
 <li>
+    <a href="{% url 'admin:catalog_book_export' %}">
+        Экспорт в Excel
+    </a>
+</li>
+
+<li>
     <a href="{% url 'admin:catalog_book_import' %}">
         Импорт из Excel
     </a>

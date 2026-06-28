@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.db import transaction
 
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 
 from .models import Author, Book, Category
 
@@ -132,3 +132,56 @@ def import_books_from_excel(file):
         "authors": authors_created,
         "categories": categories_created,
     }
+
+
+def export_books_to_excel():
+
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Книги"
+
+    sheet.append([
+        "Название",
+        "ISBN",
+        "Описание",
+        "Цена",
+        "Количество",
+        "Дата публикации",
+        "Авторы",
+        "Категории"
+    ])
+
+    books = Book.objects.prefetch_related(
+        "authors",
+        "categories",
+    )
+
+    for book in books:
+
+        authors = ", ".join(
+            str(author)
+            for author in book.authors.all()
+        )
+
+        categories = ", ".join(
+            category.name
+            for category in book.categories.all()
+        )
+
+        publication_date = book.publication_date
+
+        if publication_date.year < 1900:
+            publication_date = str(publication_date)
+
+        sheet.append([
+            book.title,
+            book.isbn,
+            book.description,
+            float(book.price),
+            book.stock_quantity,
+            publication_date,
+            authors,
+            categories
+        ])
+
+    return workbook

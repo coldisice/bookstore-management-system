@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .models import Author, Category, Book
-from .services import import_books_from_excel
+from .services import import_books_from_excel, export_books_to_excel
 
 from openpyxl import Workbook
 
@@ -514,3 +514,131 @@ class ImportBooksFromExcelTest(TestCase):
         self.assertEqual(Book.objects.count(), 1)
         self.assertEqual(Author.objects.count(), 1)
         self.assertEqual(Category.objects.count(), 1)
+
+
+class ExportBooksToExcelTest(TestCase):
+
+    def test_export_empty_catalog(self):
+
+        workbook = export_books_to_excel()
+
+        sheet = workbook.active
+
+        headers = [
+            cell.value
+            for cell in sheet[1]
+        ]
+
+        self.assertEqual(sheet.max_row, 1)
+        self.assertEqual(sheet.max_column, 8)
+
+        self.assertEqual(
+            headers,
+            [
+                "Название",
+                "ISBN",
+                "Описание",
+                "Цена",
+                "Количество",
+                "Дата публикации",
+                "Авторы",
+                "Категории"
+            ]
+        )
+
+    def test_export_single_book(self):
+
+        author = Author.objects.create(
+            first_name="Лев",
+            last_name="Толстой"
+        )
+
+        category = Category.objects.create(
+            name="Классика"
+        )
+
+        book = Book.objects.create(
+            title="Война и мир",
+            isbn="9785170901234",
+            description="Роман",
+            price=1500,
+            stock_quantity=10,
+            publication_date=date(1869, 1, 1)
+        )
+
+        book.authors.add(author)
+        book.categories.add(category)
+
+        workbook = export_books_to_excel()
+
+        sheet = workbook.active
+
+        self.assertEqual(sheet.max_row, 2)
+
+        self.assertEqual(sheet["A2"].value, "Война и мир")
+        self.assertEqual(sheet["B2"].value, "9785170901234")
+        self.assertEqual(sheet["C2"].value, "Роман")
+        self.assertEqual(sheet["D2"].value, 1500)
+        self.assertEqual(sheet["E2"].value, 10)
+        self.assertEqual(sheet["F2"].value, "1869-01-01")
+        self.assertEqual(sheet["G2"].value, "Лев Толстой")
+        self.assertEqual(sheet["H2"].value, "Классика")
+
+    def test_export_multiple_authors(self):
+
+        first = Author.objects.create(
+            first_name="Аркадий",
+            last_name="Стругацкий"
+        )
+
+        second = Author.objects.create(
+            first_name="Борис",
+            last_name="Стругацкий"
+        )
+
+        book = Book.objects.create(
+            title="Пикник на обочине",
+            isbn="9785170704324",
+            description="Фантастика",
+            price=850,
+            stock_quantity=20,
+            publication_date=date(1972, 1, 1)
+        )
+
+        book.authors.add(first, second)
+
+        workbook = export_books_to_excel()
+
+        authors = workbook.active["G2"].value
+
+        self.assertIn("Аркадий Стругацкий", authors)
+        self.assertIn("Борис Стругацкий", authors)
+
+    def test_export_multiple_categories(self):
+
+        author = Author.objects.create(
+            first_name="Фрэнк",
+            last_name="Герберт",
+        )
+
+        first = Category.objects.create(name="Фантастика")
+        second = Category.objects.create(name="Приключения")
+
+        book = Book.objects.create(
+            title="Дюна",
+            isbn="9785171203530",
+            description="Роман",
+            price=2100,
+            stock_quantity=18,
+            publication_date=date(1965, 8, 1),
+        )
+
+        book.authors.add(author)
+        book.categories.add(first, second)
+
+        workbook = export_books_to_excel()
+
+        categories = workbook.active["H2"].value
+
+        self.assertIn("Фантастика", categories)
+        self.assertIn("Приключения", categories)
