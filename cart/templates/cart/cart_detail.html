@@ -26,19 +26,22 @@
         <td>{{ item.book.price }}</td>
 
         <td>
-            <a
-                href="{% url 'update_cart_item' item.id 'decrease' %}"
-                class="btn btn-sm btn-outline-secondary">
-                -
-            </a>
+            <form method="post" action="{% url 'set_cart_item_quantity' item.id %}" class="d-inline">
+                {% csrf_token %}
+                <div class="input-group input-group-sm" style="width: 120px;">
+                    <a href="{% url 'update_cart_item' item.id 'decrease' %}" class="btn btn-sm btn-outline-secondary">
+                        -
+                    </a>
 
-            {{ item.quantity }}
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1"
+                        max="{{ item.book.stock_quantity }}" class="form-control text-center"
+                        onchange="this.form.submit()">
 
-            <a
-                href="{% url 'update_cart_item' item.id 'increase' %}"
-                class="btn btn-sm btn-outline-secondary">
-                +
-            </a>
+                    <a href="{% url 'update_cart_item' item.id 'increase' %}" class="btn btn-sm btn-outline-secondary">
+                        +
+                    </a>
+            </form>
+            </div>
         </td>
 
         <td>
@@ -46,9 +49,7 @@
         </td>
 
         <td>
-            <a
-                href="{% url 'remove_cart_item' item.id %}"
-                class="btn btn-sm btn-danger">
+            <a href="{% url 'remove_cart_item' item.id %}" class="btn btn-sm btn-danger">
                 Удалить
             </a>
         </td>
@@ -62,15 +63,11 @@
     Итого: {{ total }} ₽
 </h3>
 
-<form
-    method="post"
-    action="{% url 'create_order' %}">
+<form method="post" action="{% url 'create_order' %}">
 
     {% csrf_token %}
 
-    <button
-        type="submit"
-        class="btn btn-success">
+    <button type="submit" class="btn btn-success">
 
         Оформить заказ
 

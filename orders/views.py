@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib import messages
 
 from cart.models import Cart
 from .models import Order, OrderItem
@@ -16,6 +17,25 @@ def create_order(request):
 
     if not cart.items.exists():
         return redirect('cart_detail')
+
+    unavailable_books = []
+
+    for item in cart.items.all():
+        if item.quantity > item.book.stock_quantity:
+
+            unavailable_books.append(
+                f'{item.book.title} '
+                f'(доступно: {item.book.stock_quantity}, '
+                f'в корзине: {item.quantity})'
+            )
+
+    if unavailable_books:
+        messages.error(
+            request,
+            "Невозможно оформить заказ. Недостаточно товаров на складе:<br>"
+            + "<br>".join(unavailable_books)
+        )
+        return redirect("cart_detail")
 
     order = Order.objects.create(
         user=request.user,
@@ -37,11 +57,13 @@ def create_order(request):
             quantity=item.quantity,
             price=item.book.price
         )
+        item.book.stock_quantity -= item.quantity
+        item.book.save(update_fields=["stock_quantity"])
 
         total_price += item_total
 
     order.total_price = total_price
-    order.save()
+    order.save
 
     cart.items.all().delete()
 

@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from catalog.models import Book
 from .models import Cart, CartItem
+from django.contrib import messages
 
 
 @login_required
@@ -60,8 +61,15 @@ def update_cart_item(request, item_id, action):
     )
 
     if action == "increase":
-        item.quantity += 1
-        item.save()
+        if item.quantity < item.book.stock_quantity:
+            item.quantity += 1
+            item.save(update_fields=["quantity"])
+        else:
+            messages.warning(
+                request,
+                f'Для книги {item.book.title} '
+                f'на складе доступно только {item.book.stock_quantity} шт.'
+            )
 
     elif action == "decrease":
         item.quantity -= 1
@@ -85,3 +93,36 @@ def remove_cart_item(request, item_id):
     item.delete()
 
     return redirect('cart_detail')
+
+
+@login_required
+def set_cart_item_quantity(request, item_id):
+
+    item = get_object_or_404(
+        CartItem,
+        id=item_id,
+        cart__user=request.user
+    )
+
+    if request.method == "POST":
+
+        quantity = int(
+            request.POST.get("quantity", 1)
+        )
+        if quantity > item.book.stock_quantity:
+            messages.warning(
+                request,
+                f'Для книги {item.book.title} '
+                f'на складе доступно только {item.book.stock_quantity} шт.'
+            )
+
+        quantity = max(1, quantity)
+        quantity = min(
+            quantity,
+            item.book.stock_quantity
+        )
+
+        item.quantity = quantity
+        item.save(update_fields=["quantity"])
+
+    return redirect("cart_detail")
