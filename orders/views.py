@@ -63,7 +63,7 @@ def create_order(request):
         total_price += item_total
 
     order.total_price = total_price
-    order.save
+    order.save()
 
     cart.items.all().delete()
 
