@@ -6,49 +6,113 @@
 
 {% block content %}
 
-<a href="{% url 'book_list' %}">
-    ← Назад к каталогу
-</a>
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            {% if book.cover_image %}
+            <img src="{{ book.cover_image.url }}" width="300" class="card-img-top" alt="{{ book.title }}">
+            {% else %}
+            <div class="text-center p-5">
+                Изображение отсутствует
+            </div>
+            {% endif %}
+        </div>
+    </div>
 
-<h1 class="mt-3">
-    {{ book.title }}
-</h1>
+    <div class="col-md-8">
+        <h1 class="mb-3">
+            {{ book.title }}
+        </h1>
 
-{% if book.cover_image %}
-    <img
-        src="{{ book.cover_image.url }}"
-        width="300"
-        class="img-fluid mb-3"
-        alt="{{ book.title }}">
-{% endif %}
+        <table class="table">
+            <tr>
+                <th width="180">Автор</th>
+                <td>
+                    {% for author in book.authors.all %}
+                    {{ author }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
 
-<p>
-    <strong>ISBN:</strong>
-    {{ book.isbn }}
-</p>
+            <tr>
+                <th>
+                    ISBN:
+                <td>
 
-<p>
-    <strong>Цена:</strong>
-    {{ book.price }} ₽
-</p>
+                    {{ book.isbn }}
+                </td>
+                </th>
+            </tr>
 
-<p>
-    <strong>Описание:</strong>
-</p>
+            <tr>
+                <th>
+                    Категории
+                </th>
+                <td>
+                    {% for category in book.categories.all %}
+                    {{ category.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
 
-<p>
-    {{ book.description }}
-</p>
+            <tr>
+                <th>Дата публикации</th>
+                <td>{{ book.publication_date }}</td>
+            </tr>
 
-<form method="post"
-      action="{% url 'add_to_cart' book.id %}">
-    {% csrf_token %}
+            <tr>
+                <th>В наличии</th>
+                <td>{{ book.stock_quantity }} шт.</td>
+            </tr>
+        </table>
 
-    <button type="submit"
-            class="btn btn-primary">
-        Добавить в корзину
-    </button>
-</form>
+        <div class="card border-success mb-4">
+            <div class="card-body">
+
+
+                <h2 class="text-success mb-3">
+                    {{ book.price }} ₽
+                </h2>
+                {% if book.stock_quantity > 0 %}
+                <p class="text-success">
+                    ✓ Есть в наличии
+                </p>
+
+                <form method="post" action="{% url 'add_to_cart' book.id %}">
+                    {% csrf_token %}
+
+                    <button type="submit" class="btn btn-success btn-lg">
+                        Добавить в корзину
+                    </button>
+                </form>
+
+                {% else %}
+
+                <p class="text-danger">
+                    Нет в наличии
+                </p>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h4 class="mb-0">
+            Описание
+        </h4>
+    </div>
+    <div class="card-body">
+        {{ book.description | linebreaks }}
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'book_list' %}" class="btn btn-outline-secondary">
+        ← Назад к каталогу
+    </a>
+</div>
 
 {% endblock %}
-
